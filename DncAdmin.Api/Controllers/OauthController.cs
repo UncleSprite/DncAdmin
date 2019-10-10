@@ -19,7 +19,7 @@ namespace DncAdmin.Api.Controllers
     /// <summary>
     /// 授权
     /// </summary>
-    [Route("api/[controller]/[action]")]
+    [Route("api/[controller]")]
     public class OauthController : ControllerBase
     {
         private readonly DncAdminContext _context;
@@ -33,6 +33,13 @@ namespace DncAdmin.Api.Controllers
         /// <summary>
         /// 登录
         /// </summary>
+        /// <remarks>
+        /// post /
+        /// {
+        ///   account: 'account',
+        ///   password: 'password'
+        /// }
+        /// </remarks>
         /// <param name="loginInfo"></param>
         /// <returns></returns>
         [HttpPost]
@@ -60,7 +67,7 @@ namespace DncAdmin.Api.Controllers
             var exp = $"{new DateTimeOffset(DateTime.Now.AddMinutes(_settings.ExpMinutes)).ToUnixTimeSeconds()}";
             var claims = new List<Claim>
             {
-                new Claim("sub", user.Id.ToString()),
+                new Claim(JwtRegisteredClaimNames.Jti, user.Id.ToString()),
                 new Claim("niName", user.NiName?? string.Empty),
                 new Claim("avatar", user.Avatar?? string.Empty),
                 new Claim(JwtRegisteredClaimNames.Iss, _settings.Issuer),
@@ -73,12 +80,6 @@ namespace DncAdmin.Api.Controllers
 
             data.Token = token;
             return Ok(data);
-        }
-
-       // [Authorize]
-        public IActionResult Get()
-        {
-            return Ok(1);
-        }
+        }       
     }
 }

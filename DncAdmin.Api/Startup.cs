@@ -14,6 +14,9 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using System.Reflection;
 using Swashbuckle.AspNetCore.Swagger;
 using DncAdmin.Api.Auth;
+using System.IO;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Text;
 
 namespace DncAdmin.Api
 {
@@ -33,7 +36,8 @@ namespace DncAdmin.Api
 
             services.AddCustomContext(Configuration)
                     .AddCustomMvc()
-                    .AddCustomSwagger(Configuration);
+                    .AddCustomSwagger(Configuration)
+                    .AddCoutomAuthentication(Configuration);
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -43,6 +47,8 @@ namespace DncAdmin.Api
             {
                 options.SwaggerEndpoint("/swagger/v1/swagger.json", "DncAdmin Api");
             });
+
+            app.UseAuthentication();
 
             app.UseMvcWithDefaultRoute();
         }
@@ -88,7 +94,16 @@ namespace DncAdmin.Api
                     Version = "V1"
                 });
 
+                // 显示项目xml文档
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                options.IncludeXmlComments(xmlPath);
+
                 var jwtSettings = configuration.GetSection("JwtSettings").Get<JwtAuthenticationSettings>();
+
+                var security = new Dictionary<string, IEnumerable<string>>
+                { { jwtSettings.Issuer, new string[] { } }};
+                options.AddSecurityRequirement(security);
 
                 // 配置swagger权限
                 options.AddSecurityDefinition(jwtSettings.Issuer, new ApiKeyScheme
@@ -102,6 +117,39 @@ namespace DncAdmin.Api
 
             return services;
         }
-    }
 
+        public static IServiceCollection AddCoutomAuthentication(this IServiceCollection services, IConfiguration configuration)
+        {
+            var jwtSettings = configuration.GetSection("JwtSettings").Get<JwtAuthenticationSettings>();
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.RequireHttpsMetadata = true;
+                options.SaveToken = true;
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    SaveSigninToken = true,//保存token,后台验证token是否生效(重要)
+                    ValidateIssuer = true,//是否验证Issuer
+                    ValidateAudience = true,//是否验证Audience
+                    ValidateLifetime = true,//是否验证失效时间
+                    ValidateIssuerSigningKey = true,//是否验证SecurityKey
+                    ValidAudience = jwtSettings.Audience,//Audience
+                    ValidIssuer = jwtSettings.Issuer,//Issuer，这两项和前面签发jwt的设置一致
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Secret)),
+                    AudienceValidator = (IEnumerable<string> audiences, SecurityToken securityToken,
+                    TokenValidationParameters validationParameters) =>
+                    {
+                        bool audienceValidator = true;
+                        return audienceValidator;
+                    }
+                };
+            });
+
+            return services;
+        }
+    }
 }

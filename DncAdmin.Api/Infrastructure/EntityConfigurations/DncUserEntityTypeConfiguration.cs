@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using DncAdmin.Api.Models;
+using DncAdmin.Api.Models.Rbac;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DncAdmin.Api.Infrastructure.EntityConfigurations
@@ -40,9 +40,9 @@ namespace DncAdmin.Api.Infrastructure.EntityConfigurations
             .HasDefaultValue(0);
 
             builder.Property(t => t.CreateOn)
-           .HasColumnType("datetime")
-           .HasDefaultValueSql("GETDATE()")
-           .IsRequired();
+                .HasColumnType("datetime")
+                .HasDefaultValueSql("GETDATE()")
+                .IsRequired();
 
         }
     }

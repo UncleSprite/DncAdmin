@@ -4,14 +4,16 @@ using DncAdmin.Api.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DncAdmin.Api.Migrations
 {
     [DbContext(typeof(DncAdminContext))]
-    partial class DncAdminContextModelSnapshot : ModelSnapshot
+    [Migration("20191011061820_add_menu_and_role")]
+    partial class add_menu_and_role
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -82,9 +84,9 @@ namespace DncAdmin.Api.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<bool>("IsBuiltin");
+                    b.Property<int>("IsBuiltin");
 
-                    b.Property<bool>("IsSuperAdministrator");
+                    b.Property<int>("IsSuperAdministrator");
 
                     b.Property<string>("Name")
                         .IsRequired()

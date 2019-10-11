@@ -49,7 +49,7 @@ namespace DncAdmin.Api
             });
 
             app.UseAuthentication();
-
+            app.UseCors("cors");
             app.UseMvcWithDefaultRoute();
         }
     }
@@ -63,6 +63,18 @@ namespace DncAdmin.Api
                 //options.Filters.Add()
             })
             .AddControllersAsServices();
+
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("cors", builder =>
+                builder.AllowAnyHeader()
+               .AllowAnyMethod()
+               .AllowAnyOrigin()
+               .AllowCredentials()
+                    );
+
+            });
 
             return services;
         }

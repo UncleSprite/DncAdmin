@@ -4,14 +4,16 @@ using DncAdmin.Api.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DncAdmin.Api.Migrations
 {
     [DbContext(typeof(DncAdminContext))]
-    partial class DncAdminContextModelSnapshot : ModelSnapshot
+    [Migration("20191011081014_mod_role_type")]
+    partial class mod_role_type
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

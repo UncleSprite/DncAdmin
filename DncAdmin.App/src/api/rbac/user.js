@@ -1,5 +1,12 @@
 import request from '@/utils/request'
 
+export function userDetail(id) {
+  return request({
+    url: '/rbac/user/' + id,
+    method: 'get'
+  })
+}
+
 export function userList(query) {
   return request({
     url: '/rbac/user/list',
@@ -12,6 +19,14 @@ export function createUser(data) {
   return request({
     url: '/rbac/user',
     method: 'post',
-    params: data
+    data: data
+  })
+}
+
+export function updateUser(data) {
+  return request({
+    url: '/rbac/user',
+    method: 'put',
+    data: data
   })
 }

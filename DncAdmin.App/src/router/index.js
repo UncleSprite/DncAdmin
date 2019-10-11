@@ -50,22 +50,22 @@ export const constantRouterMap = [
   //   }]
   // },
   {
-    path: '/catalog',
+    path: '/rbac',
     component: Layout,
-    redirect: '/catalog/index',
-    name: 'Catalog',
+    redirect: '/catrbacalog/index',
+    name: 'rbac',
     meta: { title: '用户权限管理', icon: 'example' },
     children: [
       {
-        path: 'index',
-        name: 'Index',
-        component: () => import('@/views/table/index'),
+        path: 'menu',
+        name: 'menu',
+        component: () => import('@/views/rbac/menu'),
         meta: { title: '菜单管理', icon: 'table' }
       },
       {
-        path: 'index1',
-        name: 'Index1',
-        component: () => import('@/views/table/index'),
+        path: 'role',
+        name: 'role',
+        component: () => import('@/views/rbac/role'),
         meta: { title: '角色管理', icon: 'table' }
       },
       {

@@ -5,6 +5,7 @@ import 'normalize.css/normalize.css' // A modern alternative to CSS resets
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import locale from 'element-ui/lib/locale/lang/zh-CN' // lang i18n
+import moment from 'moment'
 
 import '@/styles/index.scss' // global css
 
@@ -18,6 +19,10 @@ import '@/permission' // permission control
 Vue.use(ElementUI, { locale, size: 'small' })
 
 Vue.config.productionTip = false
+
+Vue.filter('dateFmt', (input, fmt) => {
+  return moment(input).format(fmt)
+})
 
 new Vue({
   el: '#app',
